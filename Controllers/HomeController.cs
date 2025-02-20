@@ -1,9 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 
-public class HomeController : Controller
+namespace AEET.Controllers
 {
-    public IActionResult Index()
+    public class HomeController : Controller
     {
-        return View();
+        public IActionResult Landing()
+        {
+            string? role = HttpContext.Session.GetString("UserRole");
+            ViewBag.UserRole = role;  // Pass role to the view
+            return View();
+        }
     }
 }

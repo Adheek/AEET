@@ -5,12 +5,40 @@
       "PackagePath": "staticwebassets\\AEET.bundle.scp.css"
     },
     {
+      "Id": "C:\\Adheek\\Bala\\AEET\\AEET\\wwwroot\\css\\Login.css",
+      "PackagePath": "staticwebassets\\css\\Login.css"
+    },
+    {
+      "Id": "C:\\Adheek\\Bala\\AEET\\AEET\\wwwroot\\css\\default.css",
+      "PackagePath": "staticwebassets\\css\\default.css"
+    },
+    {
+      "Id": "C:\\Adheek\\Bala\\AEET\\AEET\\wwwroot\\css\\default1.css",
+      "PackagePath": "staticwebassets\\css\\default1.css"
+    },
+    {
+      "Id": "C:\\Adheek\\Bala\\AEET\\AEET\\wwwroot\\css\\default2.css",
+      "PackagePath": "staticwebassets\\css\\default2.css"
+    },
+    {
       "Id": "C:\\Adheek\\Bala\\AEET\\AEET\\wwwroot\\css\\site.css",
       "PackagePath": "staticwebassets\\css\\site.css"
     },
     {
+      "Id": "C:\\Adheek\\Bala\\AEET\\AEET\\wwwroot\\css\\style.css",
+      "PackagePath": "staticwebassets\\css\\style.css"
+    },
+    {
       "Id": "C:\\Adheek\\Bala\\AEET\\AEET\\wwwroot\\favicon.ico",
       "PackagePath": "staticwebassets\\favicon.ico"
+    },
+    {
+      "Id": "C:\\Adheek\\Bala\\AEET\\AEET\\wwwroot\\js\\default.js",
+      "PackagePath": "staticwebassets\\js\\default.js"
+    },
+    {
+      "Id": "C:\\Adheek\\Bala\\AEET\\AEET\\wwwroot\\js\\login.js",
+      "PackagePath": "staticwebassets\\js\\login.js"
     },
     {
       "Id": "C:\\Adheek\\Bala\\AEET\\AEET\\wwwroot\\js\\site.js",

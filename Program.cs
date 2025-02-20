@@ -25,13 +25,29 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Register SQL Test Service
 builder.Services.AddSingleton<Sql>();
 
+// Add CORS Policy (Modify for security later)
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        policy => policy.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+});
+
 var app = builder.Build();
 
 // Test the database connection using dependency injection
-using (var scope = app.Services.CreateScope())
+try
 {
-    var sqlTest = scope.ServiceProvider.GetRequiredService<Sql>();
-    sqlTest.TestConnection();  // ✅ This will print success/failure in the terminal
+    using (var scope = app.Services.CreateScope())
+    {
+        var sqlTest = scope.ServiceProvider.GetRequiredService<Sql>();
+        sqlTest.TestConnection();  // ✅ This will print success/failure in the terminal
+    }
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"❌ Database Connection Failed: {ex.Message}");
 }
 
 // Configure the HTTP request pipeline.
@@ -41,7 +57,10 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+// Ensure CORS is used before routing
+app.UseCors("AllowAllOrigins");
+
+app.UseHttpsRedirection(); // Ensure HTTPS redirection works correctly
 app.UseStaticFiles();
 app.UseRouting();
 app.UseSession();
@@ -49,6 +68,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Account}/{action=Login}/{id?}");
 
 app.Run();

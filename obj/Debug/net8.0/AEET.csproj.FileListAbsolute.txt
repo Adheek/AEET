@@ -172,3 +172,4 @@ C:\Adheek\Bala\AEET\AEET\obj\Debug\net8.0\refint\AEET.dll
 C:\Adheek\Bala\AEET\AEET\obj\Debug\net8.0\AEET.pdb
 C:\Adheek\Bala\AEET\AEET\obj\Debug\net8.0\AEET.genruntimeconfig.cache
 C:\Adheek\Bala\AEET\AEET\obj\Debug\net8.0\ref\AEET.dll
+C:\Adheek\Bala\AEET\AEET\obj\Debug\net8.0\AEET.sourcelink.json

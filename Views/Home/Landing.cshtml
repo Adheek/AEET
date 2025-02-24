@@ -11,14 +11,14 @@
     <title>AeeT - Asset Entry/Exit Tracking System [Default]</title>
 
 
-    
+
     <link rel="stylesheet" href="~/css/default.css">
     <link rel="stylesheet" href="~/css/default1.css">
     <link rel="stylesheet" href="~/css/default2.css">
 
     <link rel="stylesheet" href="~/css/site.css">
     <link rel="stylesheet" href="~/css/style.css">
-  
+
 
 
 
@@ -28,9 +28,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Add QR Code library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
-    <!-- Add QR Code library END -->
-
 
 
     <script src="https://unpkg.com/html5-qrcode"></script>
@@ -296,7 +293,9 @@
 
 
 
+                <!-- Manage Users Button startDate JS:- manageUsers.js -->
 
+                
                 <!-- Manage Users Button -->
                 <button class="rolebased-action-btn" id="manageuser-SA-Btn">
                     <div class="rolebased-action-icon">
@@ -307,8 +306,119 @@
                         <p>Add, edit or remove user accounts AeeT Tool</p>
                     </div>
                 </button>
+                <!-- User Management Modal -->
+                <div id="userManagementModal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>
+                                <i class="fas fa-users"></i>
+                                User Management
+                            </h2>
+                            <button class="close-btn">&times;</button>
+                        </div>
 
+                        <div class="tabs">
+                            <button class="tab-button active" data-tab="userList">
+                                <i class="fas fa-list"></i> User List
+                            </button>
+                            <button class="tab-button" data-tab="addUser">
+                                <i class="fas fa-user-plus"></i> Add New User
+                            </button>
+                        </div>
 
+                        <!-- User List Tab -->
+                        <div id="userList" class="tab-content active">
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="searchUser" placeholder="Search users~.">
+                            </div>
+                            <div class="table-container">
+                                <table class="user-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Username</th>
+                                            <th>Full Name</th>
+                                            <th>Email</th>
+                                            <th>Role</th>
+                                            <th>Department</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="userTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Add User Tab -->
+                        <div id="addUser" class="tab-content">
+                            <form id="addUserForm">
+                                <!-- User Information Section -->
+                                <div class="form-section">
+                                    <h3>User Information</h3>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="Newusername">Username*</label>
+                                            <input type="text" id="Newusername" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="password">Password*</label>
+                                            <div class="password-input">
+                                                <input type="password" id="password" required>
+                                                <button type="button" class="toggle-password">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Personal Information Section -->
+                                <div class="form-section">
+                                    <h3>Personal Information</h3>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="fullName">Full Name*</label>
+                                            <input type="text" id="fullName" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="email">Email*</label>
+                                            <input type="email" id="email" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Role & Department Section -->
+                                <div class="form-section">
+                                    <h3>Role & Department</h3>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="role">Role*</label>
+                                            <select id="role" required>
+                                                <option value="SA">Super Admin</option>
+                                                <option value="AA Team">Asset Admin</option>
+                                                <option value="TO">Transaction Officers</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="Rdepartment">Department*</label>
+                                            <input type="text" id="Rdepartment" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-actions">
+                                    <button type="button" class="btn-secondary"
+                                        onclick="switchTab('userList')">Cancel</button>
+                                    <button type="submit" class="btn-primary">
+                                        <i class="fas fa-user-plus"></i> Add User
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                @* Manage Users BUTTON END  *@
 
 
 
@@ -456,117 +566,6 @@
                     </div>
                 </div>
 
-                <!-- User Management Modal -->
-                <div id="userManagementModal" class="modal">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h2>
-                                <i class="fas fa-users"></i>
-                                User Management
-                            </h2>
-                            <button class="close-btn">&times;</button>
-                        </div>
-
-                        <div class="tabs">
-                            <button class="tab-button active" data-tab="userList">
-                                <i class="fas fa-list"></i> User List
-                            </button>
-                            <button class="tab-button" data-tab="addUser">
-                                <i class="fas fa-user-plus"></i> Add New User
-                            </button>
-                        </div>
-
-                        <!-- User List Tab -->
-                        <div id="userList" class="tab-content active">
-                            <div class="search-box">
-                                <i class="fas fa-search"></i>
-                                <input type="text" id="searchUser" placeholder="Search users~.">
-                            </div>
-                            <div class="table-container">
-                                <table class="user-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Username</th>
-                                            <th>Full Name</th>
-                                            <th>Email</th>
-                                            <th>Role</th>
-                                            <th>Department</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="userTableBody"></tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <!-- Add User Tab -->
-                        <div id="addUser" class="tab-content">
-                            <form id="addUserForm">
-                                <!-- User Information Section -->
-                                <div class="form-section">
-                                    <h3>User Information</h3>
-                                    <div class="form-row">
-                                        <div class="form-group">
-                                            <label for="Newusername">Username*</label>
-                                            <input type="text" id="Newusername" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="password">Password*</label>
-                                            <div class="password-input">
-                                                <input type="password" id="password" required>
-                                                <button type="button" class="toggle-password">
-                                                    <i class="fas fa-eye"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Personal Information Section -->
-                                <div class="form-section">
-                                    <h3>Personal Information</h3>
-                                    <div class="form-row">
-                                        <div class="form-group">
-                                            <label for="fullName">Full Name*</label>
-                                            <input type="text" id="fullName" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="email">Email*</label>
-                                            <input type="email" id="email" required>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Role & Department Section -->
-                                <div class="form-section">
-                                    <h3>Role & Department</h3>
-                                    <div class="form-row">
-                                        <div class="form-group">
-                                            <label for="role">Role*</label>
-                                            <select id="role" required>
-                                                <option value="SA">Super Admin</option>
-                                                <option value="AA Team">Asset Admin</option>
-                                                <option value="TO">Transaction Officers</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="Rdepartment">Department*</label>
-                                            <input type="text" id="Rdepartment" required>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-actions">
-                                    <button type="button" class="btn-secondary"
-                                        onclick="switchTab('userList')">Cancel</button>
-                                    <button type="submit" class="btn-primary">
-                                        <i class="fas fa-user-plus"></i> Add User
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
 
 
 
@@ -897,13 +896,11 @@
             <!-- Notification Container -->
             <div id="notificationContainer"></div>
 
-            <script src="~/js/utils.js"></script>
+
             <script src="~/js/default.js"></script>
-             
-            <script src="~/js/asset.js"></script>
-            <script src="~/js/qrGenerator.js"></script>
-            <script src="~/js/mapping.js"></script>
-             <script src="~/js/scanner.js"></script>
+            <script src="~/js/manageUsers.js"></script>
+
+
 </body>
 
 </html>

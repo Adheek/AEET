@@ -38,19 +38,5 @@ namespace AEET.Controllers
             return RedirectToAction("Login", "Account");
         }
 
-        public IActionResult AdminDashboard()
-        {
-            return View();
-        }
-
-        public IActionResult ITDashboard()
-        {
-            return View();
-        }
-
-        public IActionResult SecurityDashboard()
-        {
-            return View();
-        }
     }
 }

@@ -156,6 +156,7 @@ C:\Adheek\Bala\AEET\AEET\obj\Debug\net8.0\AEET.csproj.CoreCompileInputs.cache
 C:\Adheek\Bala\AEET\AEET\obj\Debug\net8.0\AEET.MvcApplicationPartsAssemblyInfo.cache
 C:\Adheek\Bala\AEET\AEET\obj\Debug\net8.0\AEET.RazorAssemblyInfo.cache
 C:\Adheek\Bala\AEET\AEET\obj\Debug\net8.0\AEET.RazorAssemblyInfo.cs
+C:\Adheek\Bala\AEET\AEET\obj\Debug\net8.0\AEET.sourcelink.json
 C:\Adheek\Bala\AEET\AEET\obj\Debug\net8.0\staticwebassets.build.json
 C:\Adheek\Bala\AEET\AEET\obj\Debug\net8.0\staticwebassets.development.json
 C:\Adheek\Bala\AEET\AEET\obj\Debug\net8.0\staticwebassets\msbuild.AEET.Microsoft.AspNetCore.StaticWebAssets.props
@@ -172,4 +173,3 @@ C:\Adheek\Bala\AEET\AEET\obj\Debug\net8.0\refint\AEET.dll
 C:\Adheek\Bala\AEET\AEET\obj\Debug\net8.0\AEET.pdb
 C:\Adheek\Bala\AEET\AEET\obj\Debug\net8.0\AEET.genruntimeconfig.cache
 C:\Adheek\Bala\AEET\AEET\obj\Debug\net8.0\ref\AEET.dll
-C:\Adheek\Bala\AEET\AEET\obj\Debug\net8.0\AEET.sourcelink.json

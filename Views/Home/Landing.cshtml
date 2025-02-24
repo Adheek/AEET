@@ -295,17 +295,20 @@
 
                 <!-- Manage Users Button startDate JS:- manageUsers.js -->
 
-                
-                <!-- Manage Users Button -->
-                <button class="rolebased-action-btn" id="manageuser-SA-Btn">
+
+                <!-- Manage Users Button (Now Uses ASP.NET Routing) -->
+                <a asp-controller="ManageUsers" asp-action="Index" class="rolebased-action-btn">
                     <div class="rolebased-action-icon">
                         <i class="fas fa-users"></i>
                     </div>
                     <div class="rolebased-action-text">
                         <h3>Manage Users</h3>
-                        <p>Add, edit or remove user accounts AeeT Tool</p>
+                        <p>Add, edit, or remove user accounts in AeeT Tool</p>
                     </div>
-                </button>
+                </a>
+
+
+
                 <!-- User Management Modal -->
                 <div id="userManagementModal" class="modal">
                     <div class="modal-content">
@@ -898,7 +901,7 @@
 
 
             <script src="~/js/default.js"></script>
-            <script src="~/js/manageUsers.js"></script>
+           
 
 
 </body>

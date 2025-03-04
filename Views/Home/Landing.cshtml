@@ -1,5 +1,6 @@
 @{
     Layout = null;
+    ViewData["Title"] = "Landing";
 }
 
 <!DOCTYPE html>
@@ -10,27 +11,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AeeT - Asset Entry/Exit Tracking System [Default]</title>
 
-
-
     <link rel="stylesheet" href="~/css/default.css">
     <link rel="stylesheet" href="~/css/default1.css">
     <link rel="stylesheet" href="~/css/default2.css">
-
     <link rel="stylesheet" href="~/css/site.css">
     <link rel="stylesheet" href="~/css/style.css">
 
-
-
-
-
-    <link rel="icon" type="image/png" href="images/ATLogo.png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Add QR Code library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 
-    <script src="https://unpkg.com/html5-qrcode"></script>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 </head>
 
 <body>
@@ -70,838 +63,251 @@
 
 
                 <!-- Scanner Button -->
-                <button class="rolebased-action-btn" id="scanner-SA-AA-TO-Btn" onclick="startScanner()">
+                <button class="rolebased-action-btn" id="scanner-SA-AA-TO-Btn">
                     <div class="rolebased-action-icon">
                         <i class="fas fa-qrcode"></i>
                     </div>
                     <div class="rolebased-action-text">
                         <h3>Scanner</h3>
                         <p>Scan QR codes to log check-in/check-out</p>
-
                     </div>
                 </button>
+
+                <!-- The Scanner Modal -->
+                <div id="scannerModal"
+                    style="display: none; position: fixed; z-index: 999; top: 0; left: 0; width:100%; height:100%; background:rgba(0,0,0,0.5);">
+                    <div
+                        style="background:#fff; margin:50px auto; max-width:600px; border-radius:4px; padding:20px; position:relative;">
+                        <h2><i class="fas fa-qrcode"></i> Scan QR Code</h2>
+                        <button style="position:absolute; top:10px; right:10px;" onclick="stopScanner()">X</button>
+                        <div style="border:1px solid #ccc; min-height:300px; margin-top:10px;" id="qrReader"></div>
+                    </div>
+                </div>
+
+                <script>
+                    // Global reference so we can pause/stop from onScanSuccess
+                    let html5QrcodeScanner;
+
+                    // Attach click event to the button
+                    document.getElementById('scanner-SA-AA-TO-Btn')?.addEventListener('click', startScanner);
+
+                    // Start the scanner: show the modal and render HTML5QrcodeScanner
+                    function startScanner() {
+                        try {
+                            const modal = document.getElementById('scannerModal');
+                            if (!modal) throw new Error('Scanner modal not found');
+
+                            // Show the modal
+                            modal.style.display = 'block';
+
+                            // Create the scanner instance
+                            html5QrcodeScanner = new Html5QrcodeScanner("qrReader", {
+                                fps: 10,
+                                qrbox: { width: 250, height: 250 },
+                                aspectRatio: 1.0
+                            });
+
+                            // Render the scanner with callbacks
+                            html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+
+                            console.log('Scanner started');
+                        } catch (error) {
+                            console.error('Failed to start scanner:', error);
+                            alert('Failed to start scanner: ' + error.message);
+                        }
+                    }
+
+                    // Stop scanning and hide the modal
+                    function stopScanner() {
+                        if (html5QrcodeScanner) {
+                            html5QrcodeScanner.clear(); // or .pause(true) if you prefer
+                        }
+                        const modal = document.getElementById('scannerModal');
+                        if (modal) {
+                            modal.style.display = 'none';
+                        }
+                    }
+
+                    // Called when a QR code is successfully decoded
+                    async function onScanSuccess(decodedText, decodedResult) {
+                        console.log("QR Code scanned successfully:", decodedText);
+                        try {
+                            // Optionally pause or stop scanning so it doesn't keep reading
+                            if (html5QrcodeScanner) {
+                                html5QrcodeScanner.pause(true);
+                            }
+
+                            // POST the scanned data to /Scanner/ProcessScan
+                            const response = await fetch('/Scanner/ProcessScan', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ ScannedData: decodedText })
+                            });
+
+                            if (!response.ok) {
+                                throw new Error('Failed to send scan data to the server');
+                            }
+
+                            // Stop scanning & hide modal
+                            stopScanner();
+
+                            // Now redirect to /Scanner/Index so the user can see the scanned data
+                            window.location.href = '/Scanner/Index';
+                        } catch (error) {
+                            console.error('Scan processing failed:', error);
+                            alert('Failed to process scan: ' + error.message);
+                        }
+                    }
+
+                    // Called on scan errors (fires often when scanning blank area)
+                    function onScanFailure(error) {
+                        // Filter out "No QR code found" if you don't want it in console
+                        if (error && !error.includes("No QR code found")) {
+                            console.warn('Scan error:', error);
+                        }
+                    }
+                </script>
+
 
 
                 <!-- Asset Logs Button -->
-                <button class="rolebased-action-btn" id="assetlog-SA-AA-TO-Btn">
-                    <div class="rolebased-action-icon">
-                        <i class="fas fa-history"></i>
-                    </div>
-                    <div class="rolebased-action-text">
-                        <h3>Asset Logs</h3>
-                        <p>View check-in/ check-out logs and mapping activities</p>
-                    </div>
-                </button>
+                <form asp-action="Index" asp-controller="AssetLogs" method="get">
+                    <button type="submit" class="rolebased-action-btn">
+                        <div class="rolebased-action-icon">
+                            <i class="fas fa-history"></i>
+                        </div>
+                        <div class="rolebased-action-text">
+                            <h3>Asset Logs</h3>
+                            <p>View check-in/check-out logs</p>
+                        </div>
+                    </button>
+                </form>
 
-                <!-- Add New Asset Button -->
-                <button class="rolebased-action-btn" id="addnewasset-SA-Btn">
-                    <div class="rolebased-action-icon">
-                        <i class="fas fa-plus-circle"></i>
-                    </div>
-                    <div class="rolebased-action-text">
-                        <h3>Add New Asset</h3>
-                        <p>Add new asset details to the system</p>
-                    </div>
-                </button>
+                <!-- ADD New Asset Button -->
+                <form asp-controller="AddNewAsset" asp-action="Index" method="get">
+                    <button type="submit" class="rolebased-action-btn">
+                        <div class="rolebased-action-icon">
+                            <i class="fas fa-plus-circle"></i>
+                        </div>
+                        <div class="rolebased-action-text">
+                            <h3>Add New Asset</h3>
+                            <p>Add new asset details to the system</p>
+                        </div>
+                    </button>
+                </form>
 
                 <!-- Map Asset Button -->
-                <button class="rolebased-action-btn" id="mapasset-SA-AA-Btn">
-                    <div class="rolebased-action-icon">
-                        <i class="fas fa-link"></i>
-                    </div>
-                    <div class="rolebased-action-text">
-                        <h3>Map Asset</h3>
-                        <p>Map Asset to resources</p>
-                    </div>
-                </button>
-
-                <!-- Map Asset Modal BEGINING-->
-                <!-- Map Asset Modal -->
-                <div id="mapAssetModal" class="modal">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h2>
-                                <i class="fas fa-link"></i>
-                                Asset Mapping
-                            </h2>
-                            <button class="close-btn" id="closeMapAssetModal">&times;</button>
+                <form asp-controller="MapAsset" asp-action="Index" method="get">
+                    <button type="submit" class="rolebased-action-btn">
+                        <div class="rolebased-action-icon">
+                            <i class="fas fa-link"></i>
                         </div>
-
-                        <!-- Main Tabs -->
-                        <div class="tabs">
-                            <button class="tab-button active" data-tab="mappedList">
-                                <i class="fas fa-list"></i> Mapped Assets
-                            </button>
-                            <button class="tab-button" data-tab="mapNewAsset">
-                                <i class="fas fa-plus"></i> Map New Asset
-                            </button>
+                        <div class="rolebased-action-text">
+                            <h3>Map Asset</h3>
+                            <p>Map Asset to resources</p>
                         </div>
+                    </button>
+                </form>
 
-                        <!-- Mapped Assets List Tab -->
-                        <div id="mappedList" class="tab-content active">
-                            <div class="search-box">
-                                <i class="fas fa-search"></i>
-                                <input type="text" id="searchMappedAsset" placeholder="Search mapped assets~.">
-                            </div>
-                            <div class="table-container">
-                                <table class="asset-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Asset ID</th>
-                                            <th>Asset Name</th>
-                                            <th>Employee ID</th>
-                                            <th>Employee Name</th>
-                                            <th>Department</th>
-                                            <th>Mapping Date</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="mappedAssetTableBody"></tbody>
-                                </table>
-                            </div>
+                <!-- Manage Users Button -->
+                <form asp-controller="ManageUsers" asp-action="Index" method="get">
+                    <button type="submit" class="rolebased-action-btn">
+                        <div class="rolebased-action-icon">
+                            <i class="fas fa-users"></i>
                         </div>
-
-                        <!-- Map New Asset Tab -->
-                        <div id="mapNewAsset" class="tab-content">
-                            <div class="section-tabs">
-                                <button class="section-tab active" data-section="scanAsset">Scan Asset</button>
-                                <button class="section-tab" data-section="manualEntry">Manual Entry</button>
-                            </div>
-
-                            <!-- Scan Asset Section -->
-                            <div id="scanAsset" class="section-content active">
-
-                                <!-- Add QR Scanner Button -->
-                                <div class="scan-controls">
-                                    <button type="button" class="btn-primary" id="startAssetScan">
-                                        <i class="fas fa-camera"></i> Start QR Scanner
-                                    </button>
-                                    <!-- Add file input for QR image upload -->
-                                    <div class="upload-control">
-                                        <label for="qrImageUpload" class="btn-secondary">
-                                            <i class="fas fa-upload"></i> Upload QR Image
-                                        </label>
-                                        <input type="file" id="qrImageUpload" accept="image/*" style="display: none;">
-                                    </div>
-                                </div>
-
-                                <!-- QR Scanner Container -->
-                                <div class="qr-scanner-container" id="assetQrScanner" style="display: none;">
-                                    <button type="button" class="close-scanner-btn" id="closeScannerBtn">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                    <div id="qr-reader"></div>
-                                    <div class="scanner-status">
-                                        <p>Position the QR code within the frame</p>
-                                    </div>
-                                </div>
-
-                                <div class="form-section">
-                                    <h3>Scan QR Code</h3>
-                                    <div class="scanner-container">
-                                        <div id="qr-reader"></div>
-                                    </div>
-                                    <div class="scanned-info">
-                                        <div class="form-grid">
-                                            <div class="form-group">
-                                                <label>Scanned Asset ID</label>
-                                                <input type="text" id="scannedAssetId" readonly>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Asset Name</label>
-                                                <input type="text" id="scannedAssetName" readonly>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-section">
-                                    <h3>Employee Details</h3>
-                                    <div class="form-grid">
-                                        <div class="form-group">
-                                            <label for="scannedEmployeeId">Employee ID*</label>
-                                            <input type="text" id="scannedEmployeeId" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="scannedDepartment">Department*</label>
-                                            <input type="text" id="scannedDepartment" required>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Manual Entry Section -->
-                            <div id="manualEntry" class="section-content">
-                                <div class="form-section">
-                                    <h3>Asset Information</h3>
-                                    <div class="form-grid">
-                                        <div class="form-group">
-                                            <label for="manualAssetId">Asset ID*</label>
-                                            <input type="text" id="manualAssetId" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="manualAssetName">Asset Name*</label>
-                                            <input type="text" id="manualAssetName" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="manualCategory">Category*</label>
-                                            <select id="manualCategory" required>
-                                                <option value="">Select Category</option>
-                                                <option value="Hardware">Hardware</option>
-                                                <option value="Software">Software</option>
-                                                <option value="Network">Network Equipment</option>
-                                                <option value="Peripheral">Peripheral</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-section">
-                                    <h3>Employee Information</h3>
-                                    <div class="form-grid">
-                                        <div class="form-group">
-                                            <label for="manualEmployeeId">Employee ID*</label>
-                                            <input type="text" id="manualEmployeeId" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="manualEmployeeName">Employee Name*</label>
-                                            <input type="text" id="manualEmployeeName" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="manualDepartment">Department*</label>
-                                            <input type="text" id="manualDepartment" required>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Form Actions -->
-                            <div class="form-actions">
-                                <button type="button" class="btn-secondary"
-                                    onclick="switchTab('mappedList')">Cancel</button>
-                                <button type="button" class="btn-primary" id="confirmMapping">
-                                    <i class="fas fa-link"></i> Map Asset
-                                </button>
-                            </div>
+                        <div class="rolebased-action-text">
+                            <h3>Manage Users</h3>
+                            <p>Add, edit, or remove user accounts in AeeT Tool</p>
                         </div>
-                    </div>
-                </div>
-
-                <!-- MAP ASSET END -->
-
-
-
-
-
-                <!-- Manage Users Button startDate JS:- manageUsers.js -->
-
-
-                <!-- Manage Users Button (Now Uses ASP.NET Routing) -->
-                <a asp-controller="ManageUsers" asp-action="Index" class="rolebased-action-btn">
-                    <div class="rolebased-action-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <div class="rolebased-action-text">
-                        <h3>Manage Users</h3>
-                        <p>Add, edit, or remove user accounts in AeeT Tool</p>
-                    </div>
-                </a>
-
-
-
-                <!-- User Management Modal -->
-                <div id="userManagementModal" class="modal">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h2>
-                                <i class="fas fa-users"></i>
-                                User Management
-                            </h2>
-                            <button class="close-btn">&times;</button>
-                        </div>
-
-                        <div class="tabs">
-                            <button class="tab-button active" data-tab="userList">
-                                <i class="fas fa-list"></i> User List
-                            </button>
-                            <button class="tab-button" data-tab="addUser">
-                                <i class="fas fa-user-plus"></i> Add New User
-                            </button>
-                        </div>
-
-                        <!-- User List Tab -->
-                        <div id="userList" class="tab-content active">
-                            <div class="search-box">
-                                <i class="fas fa-search"></i>
-                                <input type="text" id="searchUser" placeholder="Search users~.">
-                            </div>
-                            <div class="table-container">
-                                <table class="user-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Username</th>
-                                            <th>Full Name</th>
-                                            <th>Email</th>
-                                            <th>Role</th>
-                                            <th>Department</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="userTableBody"></tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <!-- Add User Tab -->
-                        <div id="addUser" class="tab-content">
-                            <form id="addUserForm">
-                                <!-- User Information Section -->
-                                <div class="form-section">
-                                    <h3>User Information</h3>
-                                    <div class="form-row">
-                                        <div class="form-group">
-                                            <label for="Newusername">Username*</label>
-                                            <input type="text" id="Newusername" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="password">Password*</label>
-                                            <div class="password-input">
-                                                <input type="password" id="password" required>
-                                                <button type="button" class="toggle-password">
-                                                    <i class="fas fa-eye"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Personal Information Section -->
-                                <div class="form-section">
-                                    <h3>Personal Information</h3>
-                                    <div class="form-row">
-                                        <div class="form-group">
-                                            <label for="fullName">Full Name*</label>
-                                            <input type="text" id="fullName" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="email">Email*</label>
-                                            <input type="email" id="email" required>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Role & Department Section -->
-                                <div class="form-section">
-                                    <h3>Role & Department</h3>
-                                    <div class="form-row">
-                                        <div class="form-group">
-                                            <label for="role">Role*</label>
-                                            <select id="role" required>
-                                                <option value="SA">Super Admin</option>
-                                                <option value="AA Team">Asset Admin</option>
-                                                <option value="TO">Transaction Officers</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="Rdepartment">Department*</label>
-                                            <input type="text" id="Rdepartment" required>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-actions">
-                                    <button type="button" class="btn-secondary"
-                                        onclick="switchTab('userList')">Cancel</button>
-                                    <button type="submit" class="btn-primary">
-                                        <i class="fas fa-user-plus"></i> Add User
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
-                @* Manage Users BUTTON END  *@
-
-
-
-
-
+                    </button>
+                </form>
 
                 <!-- QR Generator Button -->
-                <button class="rolebased-action-btn" id="qrgenerator-SA-AA-Btn">
-                    <div class="rolebased-action-icon">
-                        <i class="fas fa-qrcode"></i>
-                    </div>
-                    <div class="rolebased-action-text">
-                        <h3>QR Generator</h3>
-                        <p>Generate QR codes for asset tracking</p>
-                    </div>
-                </button>
-
-                <!-- QR Generator Modal -->
-                <div id="qrGeneratorModal" class="modal">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h2><i class="fas fa-qrcode"></i> QR Code Generator</h2>
-                            <button class="close-btn" id="closeQrModal">&times;</button>
+                <form asp-controller="QrGenerator" asp-action="Index" method="get">
+                    <button type="submit" class="rolebased-action-btn" id="qrgenerator-SA-AA-Btn">
+                        <div class="rolebased-action-icon">
+                            <i class="fas fa-qrcode"></i>
                         </div>
-
-
-
-                        <!-- Tab Buttons -->
-                        <div class="tabs">
-                            <button class="tab-button active" data-tab="singleQR">Single QR Generator</button>
-                            <button class="tab-button" data-tab="multipleQR">Multiple QR Generator</button>
+                        <div class="rolebased-action-text">
+                            <h3>QR Generator</h3>
+                            <p>Generate QR codes for asset tracking</p>
                         </div>
+                    </button>
+                </form>
 
 
-
-                        <!-- Single QR Generator Tab -->
-                        <div id="singleQR" class="tab-content active">
-                            <div class="form-section">
-                                <form id="qrGeneratorForm">
-                                    <div class="form-row">
-                                        <div class="form-group">
-                                            <label for="qrAssetId">Asset ID*</label>
-                                            <input type="text" id="qrAssetId" name="qrAssetId" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="qrAssetName">Asset Name*</label>
-                                            <input type="text" id="qrAssetName" name="qrAssetName" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="qrEmployeeId">Employee ID*</label>
-                                            <input type="text" id="qrEmployeeId" name="qrEmployeeId" required>
-                                        </div>
-                                    </div>
-
-                                    <div class="qr-container">
-                                        <div id="qrPreview" class="qr-preview"></div>
-                                        <div class="qr-actions">
-                                            <button type="button" class="qr-action-btn generate" id="generateQr">
-                                                <i class="fas fa-qrcode"></i> Generate
-                                            </button>
-                                            <button type="button" class="qr-action-btn download" id="downloadQr">
-                                                <i class="fas fa-download"></i> Download
-                                            </button>
-                                            <button type="button" class="qr-action-btn print" id="printQr">
-                                                <i class="fas fa-print"></i> Print
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-
-
-
-
-                        <!-- Multiple QR Generator Tab -->
-                        <div id="multipleQR" class="tab-content">
-                            <div class="table-actions">
-                                <div class="select-all-container">
-                                    <input type="checkbox" id="selectAllAssets" class="select-checkbox">
-                                    <label for="selectAllAssets">Select All</label>
-                                </div>
-                                <div class="bulk-actions">
-                                    <button type="button" class="action-btn generate" id="generateSelected">
-                                        <i class="fas fa-qrcode"></i> Generate Selected
-                                    </button>
-                                    <button type="button" class="action-btn download" id="downloadSelected">
-                                        <i class="fas fa-download"></i> Download Selected
-                                    </button>
-                                    <button type="button" class="action-btn print" id="printSelected">
-                                        <i class="fas fa-print"></i> Print Selected
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="qr-table-container">
-                                <table class="qr-table">
-                                    <thead>
-                                        <tr>
-                                            <th width="50px">
-                                                <input type="checkbox" class="select-all-checkbox">
-                                            </th>
-                                            <th>Asset ID</th>
-                                            <th>Asset Name</th>
-                                            <th>Status</th>
-                                            <th>Employee ID</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="assetTableBody">
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-
-
-
-
-
-
-
-
-                <!-- QR Scanner Modal -->
-                <div id="scannerModal" class="scanner-modal">
-                    <div class="scanner-content">
-                        <div class="scanner-header">
-                            <h2>
-                                <i class="fas fa-qrcode"></i>
-                                Scan QR Code
-                            </h2>
-                            <button id="scannerClose" class="scanner-close">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                        <div class="qr-reader-container">
-                            <div id="qrReader"></div>
-                            <div id="scannerLoading" class="scanner-loading">
-                                <i class="fas fa-spinner fa-spin"></i>
-                                <span>Initializing camera~.</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-
-
-                <!-- Security Logs Modal -->
-                <div id="logsModal" class="modal">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h2>
-                                <i class="fas fa-history"></i>
-                                Security Scanner Logs
-                            </h2>
-                            <button class="close-btn" id="closeLogsModal">&times;</button>
-                        </div>
-
-                        <div class="logs-content">
-                            <div class="date-filter">
-                                <div class="form-group">
-                                    <label for="startDate">Start Date</label>
-                                    <input type="date" id="startDate">
-                                </div>
-                                <div class="form-group">
-                                    <label for="endDate">End Date</label>
-                                    <input type="date" id="endDate">
-                                </div>
-                                <button id="filterLogs" class="btn-primary">
-                                    <i class="fas fa-filter"></i> Filter
-                                </button>
-                                <button id="downloadLogs" class="btn-secondary">
-                                    <i class="fas fa-download"></i> Download Excel
-                                </button>
-                            </div>
-
-                            <div class="table-container">
-                                <table class="logs-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Date/Time</th>
-                                            <th>User</th>
-                                            <th>Action</th>
-                                            <th>Location</th>
-                                            <th>Status</th>
-                                            <th>Details</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="logsTableBody"></tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Delete Confirmation Modal -->
-                <div id="deleteConfirmModal" class="modal">
-                    <div class="modal-content modal-sm">
-                        <div class="modal-header">
-                            <h2>
-                                <i class="fas fa-exclamation-triangle"></i>
-                                Confirm Delete
-                            </h2>
-                            <button class="close-btn" onclick="closeDeleteModal()">&times;</button>
-                        </div>
-                        <div class="modal-body">
-                            <p>Are you sure you want to delete this user?</p>
-                            <p class="warning-text">This action cannot be undone.</p>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn-secondary" onclick="closeDeleteModal()">Cancel</button>
-                            <button class="btn-danger" onclick="confirmDelete()">
-                                <i class="fas fa-trash-alt"></i> Delete
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!--Add New Device-->
-            <div id="deviceModal" class="modal">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h2>
-                            <i class="fas fa-laptop"></i>
-                            Asset Management
-                        </h2>
-                        <button class="close-btn" id="closeDeviceModal">&times;</button>
-                    </div>
-
-                    <!-- Main Tabs -->
-                    <div class="tabs">
-                        <button class="tab-button" data-tab="assetList">
-                            <i class="fas fa-list"></i> Asset List
-                        </button>
-                        <button class="tab-button active" data-tab="addAsset">
-                            <i class="fas fa-plus"></i> Add New Asset
-                        </button>
-                    </div>
-
-                    <!-- Asset List Tab Content -->
-                    <div id="assetList" class="tab-content">
-                        <div class="search-box">
-                            <i class="fas fa-search"></i>
-                            <input type="text" id="searchAsset" placeholder="Search assets~.">
-                        </div>
-                        <div class="table-container">
-                            <table class="asset-table">
-                                <thead>
-                                    <tr>
-                                        <th>Asset ID</th>
-                                        <th>Asset Name</th>
-                                        <th>Category</th>
-                                        <th>Status</th>
-                                        <th>Location</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="assetTableBody"></tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- Add Asset Tab Content -->
-                    <div id="addAsset" class="tab-content active">
-                        <!-- Section Tabs -->
-                        <div class="section-tabs">
-                            <button class="section-tab active" data-section="basicInfo">Basic Information</button>
-                            <button class="section-tab" data-section="deviceDetails">Device Details</button>
-                            <button class="section-tab" data-section="purchaseInfo">Purchase Information</button>
-                            <button class="section-tab" data-section="locationInfo">Location Information</button>
-                            <button class="section-tab" data-section="userInfo">User Information</button>
-                            <button class="section-tab" data-section="statusInfo">Status and Warranty</button>
-                            <button class="section-tab" data-section="additionalInfo">Additional Information</button>
-                        </div>
-
-                        <form id="deviceForm" class="device-form">
-                            <!-- Basic Information Section -->
-                            <div id="basicInfo" class="section-content active">
-                                <div class="form-grid">
-                                    <div class="form-group">
-                                        <label for="assetId">Asset ID*</label>
-                                        <input type="text" id="assetId" name="assetId" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="company">Company</label>
-                                        <input type="text" id="company" name="company">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="assetName">Asset Name*</label>
-                                        <input type="text" id="assetName" name="assetName" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="assetTag">Asset Tag</label>
-                                        <input type="text" id="assetTag" name="assetTag">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Device Details Section -->
-                            <div id="deviceDetails" class="section-content">
-                                <div class="form-grid">
-                                    <div class="form-group">
-                                        <label for="category">Category</label>
-                                        <select id="category" name="category">
-                                            <option value="">Select Category</option>
-                                            <option value="Laptop">Hardware</option>
-                                            <option value="Desktop Monitor">Software</option>
-                                            <option value="Headphone">Network Equipment</option>
-                                            <option value="Additional Keyboard">Peripheral</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="manufacturer">Manufacturer</label>
-                                        <input type="text" id="manufacturer" name="manufacturer">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="model">Model</label>
-                                        <input type="text" id="model" name="model">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="modelNo">Model Number</label>
-                                        <input type="text" id="modelNo" name="modelNo">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="serial">Serial Number</label>
-                                        <input type="text" id="serial" name="serial">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="macAddress">MAC Address</label>
-                                        <input type="text" id="macAddress" name="macAddress">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Purchase Information Section -->
-                            <div id="purchaseInfo" class="section-content">
-                                <div class="form-grid">
-                                    <div class="form-group">
-                                        <label for="purchased">Purchase Date</label>
-                                        <input type="date" id="purchased" name="purchased">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="cost">Cost</label>
-                                        <input type="number" id="cost" name="cost" step="0.01">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="orderNumber">Order Number</label>
-                                        <input type="text" id="orderNumber" name="orderNumber">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="supplier">Supplier</label>
-                                        <input type="text" id="supplier" name="supplier">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Location Information Section -->
-                            <div id="locationInfo" class="section-content">
-                                <div class="form-grid">
-                                    <div class="form-group">
-                                        <label for="location">Current Location</label>
-                                        <input type="text" id="location" name="location">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="address1">Address Line 1</label>
-                                        <input type="text" id="address1" name="address1">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="address2">Address Line 2</label>
-                                        <input type="text" id="address2" name="address2">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="city">City</label>
-                                        <input type="text" id="city" name="city">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="state">State</label>
-                                        <input type="text" id="state" name="state">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="country">Country</label>
-                                        <input type="text" id="country" name="country">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="zip">ZIP Code</label>
-                                        <input type="text" id="zip" name="zip">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- User Information Section -->
-                            <div id="userInfo" class="section-content">
-                                <div class="form-grid">
-                                    <div class="form-group">
-                                        <label for="username">Username</label>
-                                        <input type="text" id="username" name="username">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="employeeNo">Employee Number</label>
-                                        <input type="text" id="employeeNo" name="employeeNo">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="Udepartment">Department</label>
-                                        <input type="text" id="Udepartment" name="department">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="manager">Manager</label>
-                                        <input type="text" id="manager" name="manager">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Status and Warranty Section -->
-                            <div id="statusInfo" class="section-content">
-                                <div class="form-grid">
-                                    <div class="form-group">
-                                        <label for="status">Status</label>
-                                        <select id="status" name="status" required>
-                                            <option value="Available">Available</option>
-                                            <option value="In Use">In Use</option>
-                                            <option value="Maintenance">Maintenance</option>
-                                            <option value="Retired">Retired</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="warranty">Warranty</label>
-                                        <input type="text" id="warranty" name="warranty">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="warrantyExpires">Warranty Expiration</label>
-                                        <input type="date" id="warrantyExpires" name="warrantyExpires">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="eol">End of Life Date</label>
-                                        <input type="date" id="eol" name="eol">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Additional Information Section -->
-                            <div id="additionalInfo" class="section-content">
-                                <div class="form-grid">
-                                    <div class="form-group full-width">
-                                        <label for="configuration">Configuration</label>
-                                        <textarea id="configuration" name="configuration" rows="4"></textarea>
-                                    </div>
-                                    <div class="form-group full-width">
-                                        <label for="notes">Notes</label>
-                                        <textarea id="notes" name="notes" rows="4"></textarea>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="url">URL</label>
-                                        <input type="url" id="url" name="url">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Form Actions -->
-                            <div class="form-actions">
-                                <button type="button" class="btn-secondary"
-                                    onclick="switchTab('assetList')">Cancel</button>
-                                <button type="submit" class="btn-primary">
-                                    <i class="fas fa-plus"></i> Add Asset
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
 
             <!-- Notification Container -->
             <div id="notificationContainer"></div>
 
 
-            <script src="~/js/default.js"></script>
-           
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+    // Fetch user role from sessionStorage or API
+    fetchUserRole();
+});
+
+function fetchUserRole() {
+    fetch("/Dashboard/GetUserRole") // Call API to get user role
+        .then(response => response.json())
+        .then(data => {
+            if (data.role) {
+                configureDashboard(data.role);
+            } else {
+                console.error("Role not found");
+            }
+        })
+        .catch(error => console.error("Error fetching role:", error));
+}
+
+function configureDashboard(role) {
+    console.log("User Role:", role);
+
+    // Hide all icons by default
+    document.querySelectorAll(".rolebased-action-btn").forEach(btn => btn.style.display = "none");
+
+    // Show all icons for Admin
+    if (role === "Admin") {
+        document.querySelectorAll(".rolebased-action-btn").forEach(btn => btn.style.display = "flex");
+    }
+    // Show specific icons for IT
+    else if (role === "IT") {
+        document.getElementById("scanner-SA-AA-TO-Btn").style.display = "flex"; // Scanner
+        document.getElementById("assetlog-SA-AA-TO-Btn").style.display = "flex"; // Asset Logs
+        document.getElementById("addnewasset-SA-Btn").style.display = "flex"; // Add New Asset
+        document.getElementById("qrgenerator-SA-AA-Btn").style.display = "flex"; // qr genrator Asset
+    }
+    // Show specific icons for Security
+    else if (role === "Security") {
+        document.getElementById("scanner-SA-AA-TO-Btn").style.display = "flex"; // Scanner
+        document.getElementById("assetlog-SA-AA-TO-Btn").style.display = "flex"; // Asset Logs
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    const logoutBtn = document.querySelector(".logout-btn");
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", function() {
+            // Redirect to the logout action
+            window.location.href = "/Account/Logout";
+        });
+    }
+});
+
+function updateTime() {
+  document.getElementById("currentTime").textContent = new Date().toLocaleTimeString();
+}
+setInterval(updateTime, 1000);
+
+function updateGreeting() {
+  let h = new Date().getHours();
+  document.getElementById("greetingText").textContent = h < 12 ? "Good Morning" : h < 18 ? "Good Afternoon" : "Good Evening";
+}
+updateGreeting();
+
+
+            </script>
+
 
 
 </body>

@@ -33,6 +33,38 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "C:\\Adheek\\Bala\\AEET\\AEET\\wwwroot\\images\\ATLogo.png",
+      "PackagePath": "staticwebassets\\images\\ATLogo.png"
+    },
+    {
+      "Id": "C:\\Adheek\\Bala\\AEET\\AEET\\wwwroot\\images\\nttdata_logo_.png",
+      "PackagePath": "staticwebassets\\images\\nttdata_logo_.png"
+    },
+    {
+      "Id": "C:\\Adheek\\Bala\\AEET\\AEET\\wwwroot\\images\\splashHeader.min.jpg",
+      "PackagePath": "staticwebassets\\images\\splashHeader.min.jpg"
+    },
+    {
+      "Id": "C:\\Adheek\\Bala\\AEET\\AEET\\wwwroot\\images\\splashHeader.min1.jpg",
+      "PackagePath": "staticwebassets\\images\\splashHeader.min1.jpg"
+    },
+    {
+      "Id": "C:\\Adheek\\Bala\\AEET\\AEET\\wwwroot\\images\\splashHeader.min2.jpg",
+      "PackagePath": "staticwebassets\\images\\splashHeader.min2.jpg"
+    },
+    {
+      "Id": "C:\\Adheek\\Bala\\AEET\\AEET\\wwwroot\\images\\splashHeader.min3.jpg",
+      "PackagePath": "staticwebassets\\images\\splashHeader.min3.jpg"
+    },
+    {
+      "Id": "C:\\Adheek\\Bala\\AEET\\AEET\\wwwroot\\images\\splashHeader.min4.jpg",
+      "PackagePath": "staticwebassets\\images\\splashHeader.min4.jpg"
+    },
+    {
+      "Id": "C:\\Adheek\\Bala\\AEET\\AEET\\wwwroot\\images\\splashHeader.min5.jpg",
+      "PackagePath": "staticwebassets\\images\\splashHeader.min5.jpg"
+    },
+    {
       "Id": "C:\\Adheek\\Bala\\AEET\\AEET\\wwwroot\\js\\default.js",
       "PackagePath": "staticwebassets\\js\\default.js"
     },

@@ -158,17 +158,7 @@
 }
 
 
-/* QR Generator Specific Styles */
-.qr-container {
-   background: #f4f1ea;
-   padding: 2rem;
-   border-radius: 8px;
-   margin: 1.5rem 0;
-   display: flex;
-   flex-direction: column;
-   align-items: center;
-   gap: 1.5rem;
-}
+
 
 /* QR Code Preview Area */
 .qr-preview {
@@ -314,6 +304,7 @@
    flex-direction: column;
    align-items: center;
    gap: 1.5rem;
+   margin-left: 25%;
 }
 
 .qr-preview {

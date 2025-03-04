@@ -35,5 +35,14 @@ namespace AEET.Controllers
 
             return "";
         }
+        [HttpGet]
+        public IActionResult Logout()
+        {
+            // Clear all session data
+            HttpContext.Session.Clear();
+            // Redirect the user to the Login page
+            return RedirectToAction("Login", "Account");
+        }
+
     }
 }

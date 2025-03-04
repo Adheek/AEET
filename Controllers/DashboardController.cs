@@ -16,27 +16,5 @@ namespace AEET.Controllers
             }
             return Json(new { role = "" });
         }
-
-        // Redirect users based on role after login
-        public IActionResult Index()
-        {
-            var userRole = HttpContext.Session.GetString("UserRole");
-
-            if (userRole == "Admin")
-            {
-                return RedirectToAction("AdminDashboard");
-            }
-            else if (userRole == "IT")
-            {
-                return RedirectToAction("ITDashboard");
-            }
-            else if (userRole == "Security")
-            {
-                return RedirectToAction("SecurityDashboard");
-            }
-
-            return RedirectToAction("Login", "Account");
-        }
-
     }
 }

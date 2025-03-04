@@ -38,8 +38,15 @@
     max-width: 800px;
 }
 
+form {
+    display: flex; /* Makes form behave like a button */
+    width: 100%; /* Ensures it takes full width like the other buttons */
+}
+
 /* Action Button Styles */
 .rolebased-action-btn {
+    width: 100%; /* Ensures button fills the form */
+    height: 230px; /* Keep all buttons same height */
     background: #faf9f6;
     border: 1px solid #e0dcd3;
     border-radius: 12px;
@@ -53,6 +60,7 @@
     text-align: center;
     gap: 1.5rem;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    
 }
 
 .rolebased-action-btn:hover {
@@ -275,7 +283,7 @@
 
 .form-group input,
 .form-group select {
-    width: 100%;
+    width: 200%;
     padding: 0.8rem;
     background: #ffffff;
     border: 1px solid #e0dcd3;

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "FwBTXWQiUIyg8p/yzcrI+iWxxBznC5jV7fpTs1z3QB4=",
+  "Hash": "4HYmgyk+9IXPLXwRzhM7I0fy308rGa0Oda5dQE/w5ow=",
   "Source": "AEET",
   "BasePath": "_content/AEET",
   "Mode": "Default",
@@ -338,25 +338,6 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\splashHeader.min5.jpg"
-    },
-    {
-      "Identity": "C:\\Adheek\\Bala\\AEET\\AEET\\wwwroot\\js\\default.js",
-      "SourceId": "AEET",
-      "SourceType": "Discovered",
-      "ContentRoot": "C:\\Adheek\\Bala\\AEET\\AEET\\wwwroot\\",
-      "BasePath": "_content/AEET",
-      "RelativePath": "js/default.js",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "AssetMergeBehavior": "PreferTarget",
-      "AssetMergeSource": "",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\js\\default.js"
     },
     {
       "Identity": "C:\\Adheek\\Bala\\AEET\\AEET\\wwwroot\\js\\login.js",

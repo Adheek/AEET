@@ -172,7 +172,7 @@
 
                 <!-- Asset Logs Button -->
                 <form asp-action="Index" asp-controller="AssetLogs" method="get">
-                    <button type="submit" class="rolebased-action-btn">
+                    <button type="submit" class="rolebased-action-btn" id="assetlog-SA-AA-TO-Btn">
                         <div class="rolebased-action-icon">
                             <i class="fas fa-history"></i>
                         </div>
@@ -185,7 +185,7 @@
 
                 <!-- ADD New Asset Button -->
                 <form asp-controller="AddNewAsset" asp-action="Index" method="get">
-                    <button type="submit" class="rolebased-action-btn">
+                    <button type="submit" class="rolebased-action-btn" id="addnewasset-SA-Btn">
                         <div class="rolebased-action-icon">
                             <i class="fas fa-plus-circle"></i>
                         </div>
@@ -198,7 +198,7 @@
 
                 <!-- Map Asset Button -->
                 <form asp-controller="MapAsset" asp-action="Index" method="get">
-                    <button type="submit" class="rolebased-action-btn">
+                    <button type="submit" class="rolebased-action-btn" id="mapasset-SA-AA-Btn">
                         <div class="rolebased-action-icon">
                             <i class="fas fa-link"></i>
                         </div>
@@ -224,7 +224,7 @@
 
                 <!-- QR Generator Button -->
                 <form asp-controller="QrGenerator" asp-action="Index" method="get">
-                    <button type="submit" class="rolebased-action-btn" id="qrgenerator-SA-AA-Btn">
+                    <button  type="submit" class="rolebased-action-btn" id="qrgenerator-SA-AA-Btn">
                         <div class="rolebased-action-icon">
                             <i class="fas fa-qrcode"></i>
                         </div>
@@ -276,11 +276,13 @@ function configureDashboard(role) {
         document.getElementById("assetlog-SA-AA-TO-Btn").style.display = "flex"; // Asset Logs
         document.getElementById("addnewasset-SA-Btn").style.display = "flex"; // Add New Asset
         document.getElementById("qrgenerator-SA-AA-Btn").style.display = "flex"; // qr genrator Asset
+        document.getElementById("mapasset-SA-AA-Btn").style.display = "flex"; // map asset
     }
     // Show specific icons for Security
     else if (role === "Security") {
         document.getElementById("scanner-SA-AA-TO-Btn").style.display = "flex"; // Scanner
         document.getElementById("assetlog-SA-AA-TO-Btn").style.display = "flex"; // Asset Logs
+        
     }
 }
 

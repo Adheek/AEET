@@ -8,11 +8,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QR Generator</title>
-     <link rel="stylesheet" href="~/css/default.css">
+         <link rel="stylesheet" href="~/css/default.css">
     <link rel="stylesheet" href="~/css/default1.css">
-    <link rel="stylesheet" href="~/css/default2.css">
+    <link rel="stylesheet" href="~/css/default2.css"> 
     <link rel="stylesheet" href="~/css/site.css">
-    <link rel="stylesheet" href="~/css/style.css">  
+    <link rel="stylesheet" href="~/css/style.css">   
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
   <!-- Font Awesome -->
@@ -34,7 +34,77 @@
     padding: 0 1rem;
 }
    
+/* Overall container responsiveness */
+.qr-generator-content {
+  max-width: 700px; /* Keep the form from stretching too wide on desktop */
+  margin: 0 auto;
+  padding: 2rem;
+}
 
+/* Ensure the QR form rows wrap properly */
+.qr-form .form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Make the modal/container narrower on smaller screens */
+@@media (max-width: 768px) {
+  .qr-generator-content {
+    width: 90%;
+    padding: 1rem;
+  }
+
+  /* Switch the form to a single-column layout */
+  .qr-form .form-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  /* Make action buttons stack and fill the width */
+  .qr-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+  }
+  .qr-action-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Adjust the container and preview size */
+  .qr-container {
+    padding: 1rem;
+    margin: 1rem 0;
+  }
+  .qr-preview {
+    width: 100%;
+    max-width: 250px;
+    height: auto;
+    margin: 0 auto;
+  }
+}
+
+/* For very small screens (phones, 480px and below) */
+@@media (max-width: 480px) {
+  /* Make tab navigation stack vertically if you have tabs */
+  .qr-tabs {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  /* Further reduce spacing if needed */
+  .qr-generator-content {
+    padding: 0.75rem;
+  }
+  
+  /* Example for smaller headings or text if desired
+     .qr-generator-content h1, .qr-generator-content h2 {
+        font-size: 1.25rem;
+     }
+  */
+}
   
   </style>
 </head>

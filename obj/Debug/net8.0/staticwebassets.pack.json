@@ -65,10 +65,6 @@
       "PackagePath": "staticwebassets\\images\\splashHeader.min5.jpg"
     },
     {
-      "Id": "C:\\Adheek\\Bala\\AEET\\AEET\\wwwroot\\js\\default.js",
-      "PackagePath": "staticwebassets\\js\\default.js"
-    },
-    {
       "Id": "C:\\Adheek\\Bala\\AEET\\AEET\\wwwroot\\js\\login.js",
       "PackagePath": "staticwebassets\\js\\login.js"
     },

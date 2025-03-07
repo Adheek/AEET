@@ -1,19 +1,16 @@
 using Microsoft.EntityFrameworkCore;
 
-public class ApplicationDbContext : DbContext
+namespace AEET.Models
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+    public class ApplicationDbContext : DbContext
     {
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options)
+        {
+        }
+
+        // Add the DbSet properties using plural names
+        public DbSet<RoleMaster> RoleMasters { get; set; } = default!;
+        public DbSet<UserMaster> UserMasters { get; set; } = default!;
     }
-
-    // Add DbSet for tables
-    public DbSet<User> Users { get; set; }  
-}
-
-// Create a sample User model (if needed)
-public class User
-{
-    public int Id { get; set; }
-    public string? Name { get; set; }
-    public string? Email { get; set; }
 }

@@ -9,8 +9,13 @@ using AEET.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configure logging (builder.Logging is available by default)
+// You can add additional logging providers here if needed
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Add session service with a 30-minute idle timeout.
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
@@ -18,14 +23,14 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-// Add database connection
+// Configure Entity Framework Core to use SQL Server.
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Register SQL Test Service
+// Register your custom SQL test service.
 builder.Services.AddSingleton<Sql>();
 
-// Add CORS Policy (Modify for security later)
+// Add CORS policy for development. (Tighten this for production.)
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllOrigins",
@@ -34,15 +39,21 @@ builder.Services.AddCors(options =>
                         .AllowAnyHeader());
 });
 
+// (Optional) Add authentication and authorization services here if needed in the future.
+// For example:
+// builder.Services.AddAuthentication(/* options */)
+//         .AddCookie(/* options */);
+// builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
-// Test the database connection using dependency injection
+// Test the database connection using dependency injection.
 try
 {
     using (var scope = app.Services.CreateScope())
     {
         var sqlTest = scope.ServiceProvider.GetRequiredService<Sql>();
-        sqlTest.TestConnection();  // ✅ This will print success/failure in the terminal
+        sqlTest.TestConnection(); // This prints success/failure in the terminal.
     }
 }
 catch (Exception ex)
@@ -57,15 +68,28 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-// Ensure CORS is used before routing
+// Use the CORS policy before routing.
 app.UseCors("AllowAllOrigins");
 
-app.UseHttpsRedirection(); // Ensure HTTPS redirection works correctly
+// Redirect HTTP requests to HTTPS.
+app.UseHttpsRedirection();
+
+// Serve static files (like CSS, JavaScript, images).
 app.UseStaticFiles();
+
+// Enable routing.
 app.UseRouting();
+
+// Enable session middleware.
 app.UseSession();
+
+// (Optional) If you add authentication later, call app.UseAuthentication() before UseAuthorization.
+// app.UseAuthentication();
+
+// Enable authorization middleware.
 app.UseAuthorization();
 
+// Define the default route (starting at the login page).
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Account}/{action=Login}/{id?}");
